@@ -1,0 +1,33 @@
+.custom-input-container {
+  margin-bottom: 16px;
+}
+
+.custom-input-container .error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 4px;
+}
+
+.custom-input-container .MuiOutlinedInput-root {
+  border-radius: 8px;
+}
+
+.custom-input-container
+  .MuiOutlinedInput-root:hover
+  .MuiOutlinedInput-notchedOutline {
+  border-color: #1976d2;
+}
+
+.custom-input-container
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
+  border-color: #1976d2;
+}
+
+.custom-input-container .MuiInputLabel-root {
+  color: gray;
+}
+
+.custom-input-container .MuiInputLabel-root.Mui-focused {
+  color: #1976d2;
+}
