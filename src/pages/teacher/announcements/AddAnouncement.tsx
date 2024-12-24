@@ -15,17 +15,12 @@ import CustomInput from "../../../components/input";
 import { createAnnouncement } from "../../../redux/slice/announcement.slice";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
+import { IAnnouncement } from "../../../interfaces/announcement";
+import CustomButton from "../../../components/button";
 
-interface FormValues {
-  title: string;
-  description: string;
-  createdBy: string;
-}
-
-const initialValues: FormValues = {
+const initialValues: IAnnouncement = {
   title: "",
   description: "",
-  createdBy: "67673d1bef20ef1a563e746b",
 };
 
 const AddAnnouncementSchema = Yup.object().shape({
@@ -39,8 +34,11 @@ const AddAnnouncement: React.FC = () => {
   const { loading, error } = useSelector(
     (state: RootState) => state.announcements
   );
+  const userInfo = JSON.parse(localStorage.getItem("anyware-user") || "{}");
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = async (values: IAnnouncement) => {
+    values.createdBy = userInfo._id;
+
     const resultAction = await dispatch(createAnnouncement({ data: values }));
     if (createAnnouncement.fulfilled.match(resultAction)) {
       navigate("/announcements");
@@ -95,14 +93,7 @@ const AddAnnouncement: React.FC = () => {
               </Grid>
               <Divider sx={{ my: 4 }} />
               <Box sx={{ mt: 4 }}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  disabled={isSubmitting}
-                >
-                  Add Announcement
-                </Button>
+                <CustomButton type="submit" label="Add Announcement" />
               </Box>
             </Form>
           )}

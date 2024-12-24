@@ -1,9 +1,9 @@
 export interface IAnnouncement {
-  _id: string;
+  _id?: string;
   title: string;
   description: string;
-  createdBy: string;
-  createdAt: Date;
+  createdBy?: string;
+  createdAt?: Date;
 }
 
 export interface AnnouncementState {

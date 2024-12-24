@@ -1,13 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "../../services/api";
-
-interface AuthState {
-  token: string | null;
-  user: any | null;
-  loading: boolean;
-  error: string | null;
-}
+import { AuthState } from "../../interfaces/user";
 
 const initialState: AuthState = {
   token: null,
@@ -16,7 +10,6 @@ const initialState: AuthState = {
   error: null,
 };
 
-// Async thunk for login
 export const login = createAsyncThunk(
   "auth/login",
   async (
@@ -28,6 +21,7 @@ export const login = createAsyncThunk(
         "/user/auth/login",
         credentials
       );
+      console.log("response", response.data);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -35,11 +29,9 @@ export const login = createAsyncThunk(
   }
 );
 
-// Async thunk for logout
 export const logout = createAsyncThunk(
   "auth/logout",
   async (_, { dispatch }) => {
-    // Clear the authentication state and remove the token from local storage
     dispatch(clearAuth());
   }
 );
@@ -68,7 +60,6 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
-        console.log("hss", action.payload);
         state.loading = false;
         state.token = action.payload.token;
         state.user = action.payload.result;
@@ -79,6 +70,7 @@ const authSlice = createSlice({
         );
       })
       .addCase(login.rejected, (state, action) => {
+        console.log("action", action.payload);
         state.loading = false;
         state.error = action.payload as string;
       })

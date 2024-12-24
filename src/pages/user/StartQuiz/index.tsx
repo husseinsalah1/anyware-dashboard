@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
-  Button,
   RadioGroup,
   FormControlLabel,
   Radio,
@@ -12,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchQuiz } from "../../../redux/slice/quiz.slice";
 import { RootState, AppDispatch } from "../../../redux/store";
+import CustomButton from "../../../components/button";
 
 const StartQuiz: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -120,14 +120,13 @@ const StartQuiz: React.FC = () => {
           </RadioGroup>
         </Box>
       ))}
-      <Button
+      <CustomButton
         variant="contained"
         color="primary"
         onClick={handleSubmit}
         sx={{ mt: 4 }}
-      >
-        Submit Quiz
-      </Button>
+        label="Submit Quiz"
+      />
     </Box>
   );
 };

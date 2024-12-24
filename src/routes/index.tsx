@@ -15,6 +15,9 @@ import StartQuiz from "../pages/user/StartQuiz";
 import Result from "../pages/user/StartQuiz/Result";
 
 const AllRoutes = () => {
+  const userRole = JSON.parse(
+    localStorage.getItem("anyware-user") || "{}"
+  ).role;
   return (
     <>
       <Suspense>
@@ -23,15 +26,20 @@ const AllRoutes = () => {
             <Route path="/login" element={<Login />} />
           </Route>
           <Route element={<PrivateRoute />}>
+            {userRole === "USER" && (
+              <>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/start-quiz/:id" element={<StartQuiz />} />
+                <Route path="/quiz-results" element={<Result />} />
+              </>
+            )}
+            <Route path="/" element={"Welcome to my app"} />
             <Route path="/quizzes" element={<Quizzes />} />
             <Route path="/quizzes/:id" element={<QuizDetail />} />
             <Route path="/quizzes/update/:id" element={<UpdateQuiz />} />
             <Route path="/quizzes/create" element={<AddQuiz />} />
             <Route path="/announcements" element={<Announcements />} />
             <Route path="/announcements/create" element={<AddAnnouncement />} />
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/start-quiz/:id" element={<StartQuiz />} />
-            <Route path="/quiz-results" element={<Result />} />
             <Route
               path="/announcements/update/:id"
               element={<UpdateAnnouncement />}

@@ -11,13 +11,13 @@ import {
   IconButton,
   Grid,
   Divider,
-  Button,
 } from "@mui/material";
 import { fetchQuiz, updateQuiz } from "../../../redux/slice/quiz.slice";
 import { RootState, AppDispatch } from "../../../redux/store";
 import { MdAddCircle, MdRemoveCircle } from "react-icons/md";
 import { UpdateQuizSchema } from "../../../validations/quiz.validation";
 import { IQuiz } from "./../../../interfaces/quiz";
+import CustomButton from "../../../components/button";
 
 const UpdateQuiz: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -179,14 +179,13 @@ const UpdateQuiz: React.FC = () => {
                                       </Box>
                                     )
                                   )}
-                                  <Button
+                                  <CustomButton
                                     variant="outlined"
                                     startIcon={<MdAddCircle />}
                                     onClick={() => pushOption("")}
                                     sx={{ mt: 2 }}
-                                  >
-                                    Add Option
-                                  </Button>
+                                    label="Add Option"
+                                  />
                                 </div>
                               )}
                             </FieldArray>
@@ -199,40 +198,37 @@ const UpdateQuiz: React.FC = () => {
                             />
                           </Grid>
                           <Grid item xs={12}>
-                            <Button
+                            <CustomButton
                               variant="outlined"
                               startIcon={<MdRemoveCircle />}
                               onClick={() => remove(index)}
                               sx={{ mt: 2 }}
-                            >
-                              Remove Question
-                            </Button>
+                              label="Remove Question"
+                            />
                           </Grid>
                         </Grid>
                       </Box>
                     ))}
-                    <Button
+                    <CustomButton
                       variant="outlined"
                       startIcon={<MdAddCircle />}
                       onClick={() =>
                         push({ question: "", options: [""], correctAnswer: "" })
                       }
                       sx={{ mt: 2 }}
-                    >
-                      Add Question
-                    </Button>
+                      label="Add Question"
+                    />
                   </div>
                 )}
               </FieldArray>
               <Box sx={{ mt: 4 }}>
-                <Button
+                <CustomButton
                   type="submit"
                   variant="contained"
                   color="primary"
                   disabled={isSubmitting}
-                >
-                  Update Quiz
-                </Button>
+                  label="Update Quiz"
+                />
               </Box>
             </Form>
           )}

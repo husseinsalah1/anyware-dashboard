@@ -1,14 +1,12 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Formik, Form, FieldArray } from "formik";
-import * as Yup from "yup";
 import {
   Box,
   Typography,
   Paper,
   Grid,
   Divider,
-  Button,
   IconButton,
   CircularProgress,
 } from "@mui/material";
@@ -17,21 +15,11 @@ import CustomInput from "../../../components/input";
 import { createQuiz } from "../../../redux/slice/quiz.slice";
 import { AppDispatch, RootState } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
+import { IQuiz } from "./../../../interfaces/quiz";
+import { AddQuizSchema } from "../../../validations/quiz.validation";
+import CustomButton from "../../../components/button";
 
-interface FormValues {
-  title: string;
-  description: string;
-  subject: string;
-  semester: string;
-  totalMarks: number;
-  questions: {
-    question: string;
-    options: string[];
-    correctAnswer: string;
-  }[];
-}
-
-const initialValues: FormValues = {
+const initialValues: IQuiz = {
   title: "",
   description: "",
   subject: "",
@@ -40,32 +28,19 @@ const initialValues: FormValues = {
   questions: [],
 };
 
-const AddQuizSchema = Yup.object().shape({
-  title: Yup.string().required("Required"),
-  description: Yup.string().required("Required"),
-  subject: Yup.string().required("Required"),
-  semester: Yup.string().required("Required"),
-  totalMarks: Yup.number()
-    .required("Required")
-    .min(0, "Must be greater than or equal to 0"),
-  questions: Yup.array().of(
-    Yup.object().shape({
-      question: Yup.string().required("Required"),
-      options: Yup.array()
-        .of(Yup.string().required("Required"))
-        .min(1, "At least one option is required"),
-      correctAnswer: Yup.string().required("Required"),
-    })
-  ),
-});
-
 const AddQuiz: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { loading, error } = useSelector((state: RootState) => state.quizzes);
+  const userInfo = JSON.parse(localStorage.getItem("anyware-user") || "{}");
 
-  const onSubmit = async (values: FormValues) => {
-    const resultAction = await dispatch(createQuiz({ data: values }));
+  const onSubmit = async (values: IQuiz) => {
+    values.createdBy = userInfo._id;
+    const resultAction = await dispatch(
+      createQuiz({
+        data: values,
+      })
+    );
     if (createQuiz.fulfilled.match(resultAction)) {
       navigate("/quizzes");
     }
@@ -99,7 +74,7 @@ const AddQuiz: React.FC = () => {
           validationSchema={AddQuizSchema}
           onSubmit={onSubmit}
         >
-          {({ isSubmitting, values }) => (
+          {({ values }) => (
             <Form>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
@@ -203,14 +178,13 @@ const AddQuiz: React.FC = () => {
                                       </Box>
                                     )
                                   )}
-                                  <Button
+                                  <CustomButton
                                     variant="outlined"
                                     startIcon={<MdAddCircle />}
                                     onClick={() => pushOption("")}
                                     sx={{ mt: 2 }}
-                                  >
-                                    Add Option
-                                  </Button>
+                                    label={"Add Option"}
+                                  />
                                 </div>
                               )}
                             </FieldArray>
@@ -225,28 +199,20 @@ const AddQuiz: React.FC = () => {
                         </Grid>
                       </Box>
                     ))}
-                    <Button
+                    <CustomButton
                       variant="outlined"
                       startIcon={<MdAddCircle />}
                       onClick={() =>
                         push({ question: "", options: [""], correctAnswer: "" })
                       }
                       sx={{ mt: 2 }}
-                    >
-                      Add Question
-                    </Button>
+                      label="Add Question"
+                    />
                   </div>
                 )}
               </FieldArray>
               <Box sx={{ mt: 4 }}>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  disabled={isSubmitting}
-                >
-                  Add Quiz
-                </Button>
+                <CustomButton type="submit" label="Add Quiz" />
               </Box>
             </Form>
           )}

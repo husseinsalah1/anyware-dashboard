@@ -1,15 +1,11 @@
 import React from "react";
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
-
-interface Question {
-  question: string;
-  options: string[];
-  correctAnswer: string;
-}
+import CustomButton from "../../../components/button";
+import { IQuestion } from "../../../interfaces/quiz";
 
 interface LocationState {
-  questions: Question[];
+  questions: IQuestion[];
   answers: string[];
 }
 
@@ -51,14 +47,13 @@ const Result: React.FC = () => {
           </Typography>
         </Box>
       ))}
-      <Button
+      <CustomButton
         variant="contained"
         color="primary"
         onClick={() => navigate("/")}
         sx={{ mt: 4 }}
-      >
-        Go to Home
-      </Button>
+        label="Go to Home"
+      />
     </Box>
   );
 };

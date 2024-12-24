@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import {
   fetchAnnouncements,
   deleteAnnouncement,
@@ -10,6 +10,8 @@ import { RootState, AppDispatch } from "../../../redux/store";
 import { useNavigate } from "react-router-dom";
 import { MdEditSquare, MdDeleteForever } from "react-icons/md";
 import CustomTable from "../../../components/table";
+import Confirmation from "../../../components/confirmation";
+import Loading from "../../../components/loading";
 
 const Announcements: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -17,21 +19,35 @@ const Announcements: React.FC = () => {
   const { announcements, loading, error } = useSelector(
     (state: RootState) => state.announcements
   );
+  const [open, setOpen] = useState(false);
+  const [selectedAnnouncementId, setSelectedAnnouncementId] = useState<
+    string | null
+  >(null);
 
   useEffect(() => {
     dispatch(fetchAnnouncements());
   }, [dispatch]);
 
   const handleDelete = (id: string) => {
-    dispatch(deleteAnnouncement(id));
+    setSelectedAnnouncementId(id);
+    setOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedAnnouncementId) {
+      dispatch(deleteAnnouncement(selectedAnnouncementId));
+      setOpen(false);
+      setSelectedAnnouncementId(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setOpen(false);
+    setSelectedAnnouncementId(null);
   };
 
   const handleUpdate = (id: string) => {
     navigate(`/announcements/update/${id}`);
-  };
-
-  const handleAddNew = () => {
-    navigate("/announcements/create");
   };
 
   const columns = [
@@ -50,8 +66,12 @@ const Announcements: React.FC = () => {
         <MdEditSquare
           onClick={() => handleUpdate(announcement._id)}
           style={{ cursor: "pointer", marginRight: 8 }}
+          size={20}
+          color="#035c7f"
         />
         <MdDeleteForever
+          size={22}
+          color="#035c7f"
           onClick={() => handleDelete(announcement._id)}
           style={{ cursor: "pointer" }}
         />
@@ -59,10 +79,23 @@ const Announcements: React.FC = () => {
     ),
   }));
 
+  const handleAddNew = () => {
+    navigate("/announcements/create");
+  };
   return (
     <Box sx={{ padding: 4 }}>
       {loading ? (
-        <CircularProgress />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: 4,
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <Loading />
+        </Box>
       ) : error ? (
         <Typography color="error">{error}</Typography>
       ) : (
@@ -73,6 +106,11 @@ const Announcements: React.FC = () => {
           onAddNew={handleAddNew}
         />
       )}
+      <Confirmation
+        open={open}
+        handleCancelDelete={handleCancelDelete}
+        handleConfirmDelete={handleConfirmDelete}
+      />
     </Box>
   );
 };

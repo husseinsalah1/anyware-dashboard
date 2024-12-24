@@ -26,6 +26,7 @@ const CustomInput: React.FC<InputProps> = ({
       <Field
         className="custom-input"
         name={name}
+        size="small"
         as={TextField}
         placeholder={placeholder}
         type={type}

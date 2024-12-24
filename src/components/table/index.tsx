@@ -95,6 +95,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
         <TextField
           label="Search"
           variant="outlined"
+          size="small"
           value={searchQuery}
           onChange={handleSearch}
           sx={{ marginBottom: 2, width: "300px" }}

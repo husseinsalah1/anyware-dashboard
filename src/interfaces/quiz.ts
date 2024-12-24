@@ -1,3 +1,8 @@
+export interface IQuestion {
+  question: string;
+  options: string[];
+  correctAnswer: string;
+}
 export interface IQuiz {
   _id?: string;
   title: string;
@@ -5,6 +10,7 @@ export interface IQuiz {
   subject: string;
   semester: string;
   totalMarks: number;
+  createdBy?: string;
   questions: {
     question: string;
     options: string[];

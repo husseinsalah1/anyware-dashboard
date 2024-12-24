@@ -41,9 +41,13 @@ This project is a dashboard application built with React, Redux, TypeScript, and
 
 - **Login:**
 
-  - as an admin:
-  - Email: `salahhussein176@gmail.com`
-  - Password: `0115120323`
+  - as an teacher:
+  - Email: `teacher@teacher.com`
+  - Password: `123456789`
+
+  - as an user:
+  - Email: `user@user.com`
+  - Password: `123456789`
 
 - **Logout:**
 

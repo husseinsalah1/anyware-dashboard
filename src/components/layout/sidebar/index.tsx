@@ -17,13 +17,14 @@ interface SidebarProps {
   open: boolean;
   handleDrawerToggle: () => void;
 }
-const teacherItems = [
+const studentItems = [
   {
     name: "Dashboard",
     path: "/",
     icon: <LuLayoutDashboard size={20} />,
   },
-
+];
+const teacherItems = [
   { name: "Quizzes", path: "/quizzes", icon: <FaTasks size={20} /> },
   {
     name: "Announcements",
@@ -33,7 +34,8 @@ const teacherItems = [
 ];
 const Sidebar: React.FC<SidebarProps> = ({ open, handleDrawerToggle }) => {
   const isMobile = useMediaQuery("(max-width:600px)");
-
+  const userInfo = JSON.parse(localStorage.getItem("anyware-user") || "{}");
+  const renderItems = userInfo.role === "USER" ? studentItems : teacherItems;
   return (
     <Drawer
       sx={{
@@ -52,7 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, handleDrawerToggle }) => {
     >
       <Toolbar />
       <List>
-        {teacherItems.map((item) => (
+        {renderItems.map((item) => (
           <ListItemButton key={item.name}>
             <Link className="side-links" to={item.path}>
               <Icon>{item.icon}</Icon> {item.name}
