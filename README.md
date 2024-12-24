@@ -65,3 +65,63 @@ This project is a dashboard application built with React, Redux, TypeScript, and
     - Edit or delete an announcement by clicking on the `Edit` or `Delete` button.
   - as a user:
     - View the announcements on the dashboard.
+
+## Features
+
+- **Authentication:**
+  - Users can log in and log out.
+  - Admins can create, edit, and delete quizzes and announcements.
+- **Quizzes:**
+  - Admins can create quizzes with multiple-choice questions.
+  - Users can take quizzes and view their results.
+- **Announcements:**
+  - Admins can create announcements.
+  - Users can view announcements on the dashboard.
+
+## Project Structure
+
+The project is structured as follows:
+
+- **`src/`**:
+
+  - **`components/`**: Contains the React components.
+  - **`interface/`**: Contains the TypeScript interfaces.
+  - **`pages/`**: Contains the React pages.
+  - **`redux/`**: Contains the Redux actions, reducers, and store.
+  - **`routes/`**: Contains the React Router routes.
+  - **`validations/`**: Contains the form validations.
+  - **`README.md`**: The project documentation.
+
+## API Endpoints
+
+The project uses the following API endpoints:
+
+- **`/api/auth`**:
+
+  - **`POST /login`**: Log in with email and password.
+
+- **`/api/quizzes`**:
+
+  - **`GET /get?_id={id}`**: Get all quizzes.
+  - **`POST /create`**: Create a new quiz.
+  - **`PUT /update?_id={id}`**: Update a quiz.
+  - **`DELETE /delete?_id={id}`**: Delete a quiz.
+
+- **`/api/announcements`**:
+
+  - **`GET /get?_id={id}`**: Get all announcements.
+  - **`POST /create`**: Create a new announcement.
+  - **`PUT /update?_id={id}`**: Update an announcement.
+  - **`DELETE /delete?_id={id}`**: Delete an announcement.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a pull request.
+
+## License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+```
+
+```
