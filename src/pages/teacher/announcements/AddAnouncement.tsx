@@ -1,78 +1,78 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Box, Typography, Paper, CircularProgress, Grid } from "@mui/material";
 import {
-  fetchAnnouncement,
-  updateAnnouncement,
-} from "../../redux/slice/announcement.slice";
-import { RootState, AppDispatch } from "../../redux/store";
-import CustomInput from "../../components/input";
-import CustomButton from "../../components/button";
+  Box,
+  Typography,
+  Paper,
+  Grid,
+  Divider,
+  Button,
+  CircularProgress,
+} from "@mui/material";
+import CustomInput from "../../../components/input";
+import { createAnnouncement } from "../../../redux/slice/announcement.slice";
+import { AppDispatch, RootState } from "../../../redux/store";
+import { useNavigate } from "react-router-dom";
 
 interface FormValues {
   title: string;
   description: string;
+  createdBy: string;
 }
 
-const UpdateAnnouncementSchema = Yup.object().shape({
+const initialValues: FormValues = {
+  title: "",
+  description: "",
+  createdBy: "67673d1bef20ef1a563e746b",
+};
+
+const AddAnnouncementSchema = Yup.object().shape({
   title: Yup.string().required("Required"),
   description: Yup.string().required("Required"),
 });
 
-const UpdateAnnouncement: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+const AddAnnouncement: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { announcement, loading, error } = useSelector(
+  const { loading, error } = useSelector(
     (state: RootState) => state.announcements
   );
 
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchAnnouncement(id));
-    }
-  }, [dispatch, id]);
-
   const onSubmit = async (values: FormValues) => {
-    if (id) {
-      const resultAction = await dispatch(
-        updateAnnouncement({ id, data: values })
-      );
-      if (updateAnnouncement.fulfilled.match(resultAction)) {
-        navigate(`/announcements/${id}`);
-      }
+    const resultAction = await dispatch(createAnnouncement({ data: values }));
+    if (createAnnouncement.fulfilled.match(resultAction)) {
+      navigate("/announcements");
     }
-  };
-
-  if (loading) {
-    return <CircularProgress />;
-  }
-
-  if (error) {
-    return <Typography color="error">{error}</Typography>;
-  }
-
-  if (!announcement) {
-    return <Typography>No announcement found</Typography>;
-  }
-
-  const initialValues: FormValues = {
-    title: announcement.title,
-    description: announcement.description,
   };
 
   return (
     <Box sx={{ padding: 4 }}>
       <Paper elevation={3} sx={{ padding: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Update Announcement
+          Add New Announcement
         </Typography>
+        {loading && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
+        {error && (
+          <Typography color="error" gutterBottom>
+            {error}
+          </Typography>
+        )}
         <Formik
           initialValues={initialValues}
-          validationSchema={UpdateAnnouncementSchema}
+          validationSchema={AddAnnouncementSchema}
           onSubmit={onSubmit}
         >
           {({ isSubmitting }) => (
@@ -93,12 +93,16 @@ const UpdateAnnouncement: React.FC = () => {
                   />
                 </Grid>
               </Grid>
+              <Divider sx={{ my: 4 }} />
               <Box sx={{ mt: 4 }}>
-                <CustomButton
+                <Button
                   type="submit"
-                  label="Update Announcement"
+                  variant="contained"
+                  color="primary"
                   disabled={isSubmitting}
-                />
+                >
+                  Add Announcement
+                </Button>
               </Box>
             </Form>
           )}
@@ -108,4 +112,4 @@ const UpdateAnnouncement: React.FC = () => {
   );
 };
 
-export default UpdateAnnouncement;
+export default AddAnnouncement;

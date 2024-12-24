@@ -1,22 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import ApiService from "../../services/apiServices";
-
-// Define types for the response data
-interface IAnnouncement {
-  _id: string;
-  title: string;
-  description: string;
-  createdBy: string;
-  __v: number;
-}
-
-interface AnnouncementState {
-  announcements: IAnnouncement[];
-  announcement: IAnnouncement | null;
-  loading: boolean;
-  error: string | null;
-}
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import {
+  AnnouncementState,
+  IAnnouncement,
+} from "../../interfaces/announcement";
 
 const initialState: AnnouncementState = {
   announcements: [],
@@ -25,7 +13,6 @@ const initialState: AnnouncementState = {
   error: null,
 };
 
-// Fetch all announcements
 export const fetchAnnouncements = createAsyncThunk<
   IAnnouncement[],
   void,
@@ -35,13 +22,12 @@ export const fetchAnnouncements = createAsyncThunk<
     const response = (await ApiService.get("/announcement/list")) as {
       result: IAnnouncement[];
     };
-    return response.result; // Extract the result property
+    return response.result;
   } catch (error: any) {
     return rejectWithValue(error.message || "Failed to fetch announcements");
   }
 });
 
-// Fetch a single announcement by ID
 export const fetchAnnouncement = createAsyncThunk<
   IAnnouncement,
   string,
@@ -51,35 +37,28 @@ export const fetchAnnouncement = createAsyncThunk<
     const response = (await ApiService.get(`/announcement/get?_id=${id}`)) as {
       result: IAnnouncement;
     };
-    return response.result; // Extract the result property
+    return response.result;
   } catch (error: any) {
     return rejectWithValue(error.message || "Failed to fetch announcement");
   }
 });
 
-// Create a new announcement
 export const createAnnouncement = createAsyncThunk<
   IAnnouncement,
-  IAnnouncement,
+  { data: Partial<IAnnouncement> },
   { rejectValue: string }
->(
-  "announcements/createAnnouncement",
-  async (announcement, { rejectWithValue }) => {
-    try {
-      const response = (await ApiService.post(
-        "/announcement/create",
-        announcement
-      )) as {
-        result: IAnnouncement;
-      };
-      return response.result; // Extract the result property
-    } catch (error: any) {
-      return rejectWithValue(error.message || "Failed to create announcement");
-    }
+>("announcement/createAnnouncement", async ({ data }, { rejectWithValue }) => {
+  try {
+    const response = (await ApiService.post(
+      `/announcement/create`,
+      data
+    )) as IAnnouncement;
+    return response;
+  } catch (error: any) {
+    return rejectWithValue(error.message || "Failed to update announcement");
   }
-);
+});
 
-// Update an announcement by ID
 export const updateAnnouncement = createAsyncThunk<
   IAnnouncement,
   { id: string; data: Partial<IAnnouncement> },
@@ -91,17 +70,15 @@ export const updateAnnouncement = createAsyncThunk<
       const response = (await ApiService.put(
         `/announcement/update?_id=${id}`,
         data
-      )) as {
-        result: IAnnouncement;
-      };
-      return response.result; // Extract the result property
+      )) as IAnnouncement;
+
+      return response;
     } catch (error: any) {
       return rejectWithValue(error.message || "Failed to update announcement");
     }
   }
 );
 
-// Delete an announcement by ID
 export const deleteAnnouncement = createAsyncThunk<
   string,
   string,

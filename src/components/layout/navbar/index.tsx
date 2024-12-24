@@ -20,7 +20,9 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ handleDrawerToggle }) => {
   const isMobile = useMediaQuery("(max-width:600px)");
-  const userName = "John Doe"; // Replace with actual user name
+
+  const userInfo = localStorage.getItem("anyware-user");
+  const user = userInfo ? JSON.parse(userInfo) : null;
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -36,6 +38,9 @@ const Navbar: React.FC<NavbarProps> = ({ handleDrawerToggle }) => {
         width: isMobile ? "100%" : `calc(100% - 240px)`,
         ml: isMobile ? 0 : `240px`,
       }}
+      style={{
+        background: "#026873",
+      }}
     >
       <Toolbar>
         {isMobile && (
@@ -48,14 +53,11 @@ const Navbar: React.FC<NavbarProps> = ({ handleDrawerToggle }) => {
             <IoMdMenu />
           </IconButton>
         )}
-        {!isMobile && (
-          <Typography variant="h6" noWrap sx={{ marginRight: 2 }}>
-            {userName}
-          </Typography>
-        )}
+
         <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
-          Dashboard
+          Welcome {user?.name || "Welcome User"}
         </Typography>
+
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Button color="inherit" onClick={handleLogout}>
             Logout

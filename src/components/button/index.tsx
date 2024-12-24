@@ -8,20 +8,7 @@ interface CustomButtonProps extends ButtonProps {
 
 const CustomButton: React.FC<CustomButtonProps> = ({ label, ...props }) => {
   return (
-    <Button
-      {...props}
-      className="custom-button"
-      sx={{
-        borderRadius: "8px",
-        textTransform: "none",
-        padding: "10px 20px",
-        fontSize: "16px",
-        "&:hover": {
-          backgroundColor: "blue",
-          color: "white",
-        },
-      }}
-    >
+    <Button {...props} className="custom-button">
       {label}
     </Button>
   );

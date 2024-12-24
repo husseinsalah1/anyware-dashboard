@@ -1,0 +1,9 @@
+.exam-time {
+  background-image: url("./background.jpg") !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  height: 20% !important;
+  color: white !important;
+  font-size: larger !important;
+}

@@ -18,14 +18,13 @@ const CustomInput: React.FC<InputProps> = ({
   name,
   placeholder,
   multiline = false,
-  rtl = false,
-  style,
   type = "text",
   label,
 }) => {
   return (
     <div className="custom-input-container">
       <Field
+        className="custom-input"
         name={name}
         as={TextField}
         placeholder={placeholder}
@@ -35,11 +34,6 @@ const CustomInput: React.FC<InputProps> = ({
         rows={multiline ? 4 : undefined}
         variant="outlined"
         fullWidth
-        InputProps={{
-          style: {
-            direction: rtl ? "rtl" : "ltr",
-          },
-        }}
         sx={{
           "& .MuiOutlinedInput-root": {
             "& fieldset": {
@@ -59,11 +53,7 @@ const CustomInput: React.FC<InputProps> = ({
             color: "blue",
           },
         }}
-        className={`${style?.field_input} rounded-md shadow-sm ${
-          rtl ? "text-right" : ""
-        }`}
       />
-      {/* Display any error message below the input */}
       <ErrorMessage name={name} component="div" className="error-message" />
     </div>
   );

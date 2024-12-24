@@ -84,10 +84,25 @@ export const updateQuiz = createAsyncThunk<
   { rejectValue: string }
 >("quizzes/updateQuiz", async ({ id, data }, { rejectWithValue }) => {
   try {
-    const response = (await ApiService.put(`/quiz/update?_id=${id}`, data)) as {
-      result: IQuiz;
-    };
-    return response.result; // Extract the result property
+    const response = (await ApiService.put(
+      `/quiz/update?_id=${id}`,
+      data
+    )) as IQuiz;
+    return response;
+  } catch (error: any) {
+    return rejectWithValue(error.message || "Failed to update quiz");
+  }
+});
+
+// Create Quiz
+export const createQuiz = createAsyncThunk<
+  IQuiz,
+  { data: Partial<IQuiz> },
+  { rejectValue: string }
+>("quizzes/createQuiz", async ({ data }, { rejectWithValue }) => {
+  try {
+    const response = (await ApiService.post(`/quiz/create`, data)) as IQuiz;
+    return response;
   } catch (error: any) {
     return rejectWithValue(error.message || "Failed to update quiz");
   }
@@ -135,9 +150,22 @@ const quizSlice = createSlice({
         const index = state.quizzes.findIndex(
           (quiz) => quiz._id === action.payload._id
         );
+        console.log(index);
         if (index !== -1) {
           state.quizzes[index] = action.payload;
         }
+      })
+      .addCase(createQuiz.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createQuiz.fulfilled, (state, action: PayloadAction<IQuiz>) => {
+        state.loading = false;
+        state.quizzes.push(action.payload);
+      })
+      .addCase(createQuiz.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to create quiz";
       });
   },
 });

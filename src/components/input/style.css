@@ -1,5 +1,10 @@
+.custom-input-container input {
+  padding: 10px !important;
+}
 .custom-input-container {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  padding: 5px !important;
 }
 
 .custom-input-container .error-message {

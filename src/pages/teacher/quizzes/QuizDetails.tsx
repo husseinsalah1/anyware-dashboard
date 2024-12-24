@@ -10,8 +10,8 @@ import {
   ListItemText,
   CircularProgress,
 } from "@mui/material";
-import { fetchQuiz } from "../../redux/slice/quiz.slice";
-import { RootState, AppDispatch } from "../../redux/store";
+import { fetchQuiz } from "../../../redux/slice/quiz.slice";
+import { RootState, AppDispatch } from "../../../redux/store";
 
 const QuizDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();

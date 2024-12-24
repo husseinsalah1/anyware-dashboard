@@ -1,9 +1,8 @@
 import React from "react";
-import { Box, CssBaseline, Toolbar, useMediaQuery } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import Sidebar from "./sidebar";
 import Navbar from "./navbar";
-
+import { Box, CssBaseline, Toolbar, useMediaQuery } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 interface LayoutProps {
   children: React.ReactNode;
 }

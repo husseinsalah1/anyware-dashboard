@@ -1,22 +1,22 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
 import { Formik, Form, FieldArray } from "formik";
 import * as Yup from "yup";
 import {
   Box,
   Typography,
   Paper,
-  CircularProgress,
-  IconButton,
   Grid,
   Divider,
+  Button,
+  IconButton,
+  CircularProgress,
 } from "@mui/material";
-import { fetchQuiz, updateQuiz } from "../../redux/slice/quiz.slice";
-import { RootState, AppDispatch } from "../../redux/store";
-import CustomInput from "../../components/input";
-import CustomButton from "../../components/button";
 import { MdAddCircle, MdRemoveCircle } from "react-icons/md";
+import CustomInput from "../../../components/input";
+import { createQuiz } from "../../../redux/slice/quiz.slice";
+import { AppDispatch, RootState } from "../../../redux/store";
+import { useNavigate } from "react-router-dom";
 
 interface FormValues {
   title: string;
@@ -31,7 +31,16 @@ interface FormValues {
   }[];
 }
 
-const UpdateQuizSchema = Yup.object().shape({
+const initialValues: FormValues = {
+  title: "",
+  description: "",
+  subject: "",
+  semester: "",
+  totalMarks: 0,
+  questions: [],
+};
+
+const AddQuizSchema = Yup.object().shape({
   title: Yup.string().required("Required"),
   description: Yup.string().required("Required"),
   subject: Yup.string().required("Required"),
@@ -50,59 +59,44 @@ const UpdateQuizSchema = Yup.object().shape({
   ),
 });
 
-const UpdateQuiz: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+const AddQuiz: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { quiz, loading, error } = useSelector(
-    (state: RootState) => state.quizzes
-  );
-
-  useEffect(() => {
-    if (id) {
-      dispatch(fetchQuiz(id));
-    }
-  }, [dispatch, id]);
+  const { loading, error } = useSelector((state: RootState) => state.quizzes);
 
   const onSubmit = async (values: FormValues) => {
-    if (id) {
-      const resultAction = await dispatch(updateQuiz({ id, data: values }));
-      if (updateQuiz.fulfilled.match(resultAction)) {
-        navigate(`/quizzes/${id}`);
-      }
+    const resultAction = await dispatch(createQuiz({ data: values }));
+    if (createQuiz.fulfilled.match(resultAction)) {
+      navigate("/quizzes");
     }
-  };
-
-  if (loading) {
-    return <CircularProgress />;
-  }
-
-  if (error) {
-    return <Typography color="error">{error}</Typography>;
-  }
-
-  if (!quiz) {
-    return <Typography>No quiz found</Typography>;
-  }
-
-  const initialValues: FormValues = {
-    title: quiz.title,
-    description: quiz.description,
-    subject: quiz.subject,
-    semester: quiz.semester,
-    totalMarks: quiz.totalMarks,
-    questions: quiz.questions,
   };
 
   return (
     <Box sx={{ padding: 4 }}>
       <Paper elevation={3} sx={{ padding: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Update Quiz
+          Add New Quiz
         </Typography>
+        {loading && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
+        {error && (
+          <Typography color="error" gutterBottom>
+            {error}
+          </Typography>
+        )}
         <Formik
           initialValues={initialValues}
-          validationSchema={UpdateQuizSchema}
+          validationSchema={AddQuizSchema}
           onSubmit={onSubmit}
         >
           {({ isSubmitting, values }) => (
@@ -153,14 +147,24 @@ const UpdateQuiz: React.FC = () => {
                 {({ push, remove }) => (
                   <div>
                     {values.questions.map((question, index) => (
-                      <Box key={index} sx={{ mb: 4 }}>
+                      <Box key={index} sx={{ mb: 4, position: "relative" }}>
                         <Grid container spacing={2}>
-                          <Grid item xs={12}>
+                          <Grid
+                            item
+                            xs={12}
+                            sx={{ display: "flex", alignItems: "center" }}
+                          >
                             <CustomInput
                               name={`questions.${index}.question`}
                               label={`Question ${index + 1}`}
                               placeholder="Enter question"
                             />
+                            <IconButton
+                              onClick={() => remove(index)}
+                              sx={{ ml: 1 }}
+                            >
+                              <MdRemoveCircle />
+                            </IconButton>
                           </Grid>
                           <Grid item xs={12}>
                             <Typography variant="body1" gutterBottom>
@@ -170,7 +174,7 @@ const UpdateQuiz: React.FC = () => {
                               {({ push: pushOption, remove: removeOption }) => (
                                 <div>
                                   {question.options.map(
-                                    (option, optionIndex) => (
+                                    (_option, optionIndex) => (
                                       <Box
                                         key={optionIndex}
                                         sx={{
@@ -199,9 +203,14 @@ const UpdateQuiz: React.FC = () => {
                                       </Box>
                                     )
                                   )}
-                                  <IconButton onClick={() => pushOption("")}>
-                                    <MdAddCircle />
-                                  </IconButton>
+                                  <Button
+                                    variant="outlined"
+                                    startIcon={<MdAddCircle />}
+                                    onClick={() => pushOption("")}
+                                    sx={{ mt: 2 }}
+                                  >
+                                    Add Option
+                                  </Button>
                                 </div>
                               )}
                             </FieldArray>
@@ -213,30 +222,31 @@ const UpdateQuiz: React.FC = () => {
                               placeholder="Enter correct answer"
                             />
                           </Grid>
-                          <Grid item xs={12}>
-                            <IconButton onClick={() => remove(index)}>
-                              <MdRemoveCircle />
-                            </IconButton>
-                          </Grid>
                         </Grid>
                       </Box>
                     ))}
-                    <IconButton
+                    <Button
+                      variant="outlined"
+                      startIcon={<MdAddCircle />}
                       onClick={() =>
                         push({ question: "", options: [""], correctAnswer: "" })
                       }
+                      sx={{ mt: 2 }}
                     >
-                      <MdAddCircle />
-                    </IconButton>
+                      Add Question
+                    </Button>
                   </div>
                 )}
               </FieldArray>
               <Box sx={{ mt: 4 }}>
-                <CustomButton
+                <Button
                   type="submit"
-                  label="Update Quiz"
+                  variant="contained"
+                  color="primary"
                   disabled={isSubmitting}
-                />
+                >
+                  Add Quiz
+                </Button>
               </Box>
             </Form>
           )}
@@ -246,4 +256,4 @@ const UpdateQuiz: React.FC = () => {
   );
 };
 
-export default UpdateQuiz;
+export default AddQuiz;

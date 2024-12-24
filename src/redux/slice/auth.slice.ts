@@ -28,7 +28,6 @@ export const login = createAsyncThunk(
         "/user/auth/login",
         credentials
       );
-
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response.data);
@@ -69,10 +68,15 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(login.fulfilled, (state, action) => {
+        console.log("hss", action.payload);
         state.loading = false;
         state.token = action.payload.token;
-        state.user = action.payload.user;
+        state.user = action.payload.result;
         localStorage.setItem("anyware-token", action.payload.token);
+        localStorage.setItem(
+          "anyware-user",
+          JSON.stringify(action.payload.result)
+        );
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
