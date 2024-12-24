@@ -87,6 +87,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
               borderColor: "#035c7f",
               paddingBottom: 1,
               marginBottom: 2,
+              fontSize: "1.5rem",
             }}
           >
             {title}
@@ -102,7 +103,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
         />
       </Box>
       <Paper elevation={3} sx={{ width: "100%", overflow: "hidden" }}>
-        <TableContainer sx={{ maxHeight: 440 }}>
+        <TableContainer sx={{ maxHeight: 440, fontSize: "1rem" }}>
           <Table stickyHeader>
             <TableHead>
               <TableRow>
@@ -111,6 +112,7 @@ const CustomTable: React.FC<CustomTableProps> = ({
                     key={column.id}
                     align={column.align}
                     style={{ minWidth: column.minWidth }}
+                    sx={{ fontSize: "1.4rem" }}
                   >
                     {column.label}
                   </TableCell>
@@ -125,7 +127,11 @@ const CustomTable: React.FC<CustomTableProps> = ({
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
+                          sx={{ fontSize: "1.2rem" }}
+                        >
                           {column.id === "title" ? (
                             <Link
                               to={`/quizzes/${row._id}`}
