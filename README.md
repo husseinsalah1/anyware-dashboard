@@ -41,9 +41,27 @@ This project is a dashboard application built with React, Redux, TypeScript, and
 
 - **Login:**
 
-  - Username: `admin`
-  - Password: `admin`
+  - as an admin:
+  - Email: `salahhussein176@gmail.com`
+  - Password: `0115120323`
 
 - **Logout:**
 
   - Click on the logout tab in the top right corner of the screen and select `Logout`.
+
+- **Quizzes:**
+
+  - as an admin:
+    - Create a new quiz by clicking on the `+` button .
+    - Edit or delete a quiz by clicking on the `Edit` or `Delete` button.
+  - as a user:
+    - Take a quiz by clicking on the `Start Quiz` button.
+    - View the quiz results by clicking on the `Submit Quiz` button.
+
+- **Announcements:**
+
+  - as an admin:
+    - Create a new announcement by clicking on the `+` button.
+    - Edit or delete an announcement by clicking on the `Edit` or `Delete` button.
+  - as a user:
+    - View the announcements on the dashboard.
