@@ -61,6 +61,7 @@ const Announcements: React.FC = () => {
   const rows = announcements.map((announcement: any) => ({
     ...announcement,
     createdBy: announcement.createdBy?.name,
+    createdAt: new Date(announcement.createdAt).toLocaleString(),
     actions: (
       <>
         <MdEditSquare
