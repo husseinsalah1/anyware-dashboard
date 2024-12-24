@@ -36,3 +36,14 @@ This project is a dashboard application built with React, Redux, TypeScript, and
 4. **Open the application in your browser:**
 
    [http://localhost:5173](http://localhost:5173)
+
+## Usage
+
+- **Login:**
+
+  - Username: `admin`
+  - Password: `admin`
+
+- **Logout:**
+
+  - Click on the logout tab in the top right corner of the screen and select `Logout`.
